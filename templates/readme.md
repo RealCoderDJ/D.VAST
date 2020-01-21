@@ -1,1 +1,1 @@
-I'm the owner of the files, B I T C |-|
+the folder for all the html files
