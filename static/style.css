@@ -1,0 +1,201 @@
+@import "./var.css";
+
+body {
+    color: var(--white);
+    background-color: var(--black);
+    font-family: Verdana !important;
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+    padding-left: 5px;
+    padding-right: 5px;
+    
+}
+
+.navbar-brand img {
+    height: 3rem;
+}
+
+i {
+    color: white;
+}
+i:hover{
+    color: var(--deloittegreen);
+}
+
+.navbar {
+    background-color: var(--black);
+    border-radius: 0px !important;
+    margin-bottom: 0px !important;
+    margin-right: 0px !important;
+
+}
+
+input[type=email],
+input[type=text],
+input[type=password],
+input[type=number] {
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid var(--white) !important;
+    color: var(--white);
+    max-width: 30%
+}
+
+.btn-primary {
+    background-color: var(--black); 
+}
+.btn-primary:hover {
+    background-color: var(--black);
+}
+
+.register {
+    margin-top: 20%;
+    background-color: var(--black);
+    text-align: center;
+    border-radius: 25px;
+}
+
+.bluetop {
+    border-radius: 25px;
+    border: 2px solid var(--blue3);
+    padding: 2%;
+}
+
+.bluetop:hover {
+    background-color: var(--blue350);
+    border: 2px  var(--blue350);
+}
+
+.greentop {
+    margin-top: 3%;
+    border-radius: 25px;
+    border: 2px solid var(--deloittegreen);
+    padding: 2%;
+}
+
+.greentop:hover {
+    background-color: var(--deloittegreen_50);
+    border: 2px  var(--deloittegreen_50);
+}
+
+.buttonHolder { 
+    margin-top: 2%;
+    text-align: center; 
+}
+
+
+.row-centered {
+    text-align: center;
+    margin-top: 3%;
+}
+
+.card-deck {
+    text-align: center;
+    justify-content: center;
+    vertical-align: middle;
+    max-width: 100%;
+}
+.card-1 {
+    text-align: center;
+    width: 30%;
+    margin-top: 3%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    border-radius: 25px;
+    color: white;
+    border: 2px solid var(--deloittegreen);
+    padding: 2%;
+    background-color: var(--deloittegreen_50);
+}
+.card-1:hover {
+    background-color: var(--deloittegreen);
+}
+
+.card-2 {
+    text-align: center;
+    width: 30%;
+    margin-top: 3%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    border-radius: 25px;
+    color: white;
+    border: 2px solid var(--blue3);
+    padding: 2%;
+    background-color: var(--blue350);
+}
+.card-2:hover {
+    background-color: var(--blue3);
+}
+
+.card-3 {
+    text-align: center;
+    width: 30%;
+    margin-top: 3%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    border-radius: 25px;
+    color: white;
+    border: 2px solid var(--teal5);
+    padding: 2%;
+    background-color: var(--teal550);
+}
+.card-3:hover {
+    background-color: var(--teal5);
+}
+
+.card-4 {
+    text-align: center;
+    width: 30%;
+    margin-top: 3%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    border-radius: 25px;
+    color: white;
+    border: 2px solid var(--blue6);
+    padding: 2%;
+    background-color: var(--blue650);
+}
+.card-4:hover {
+    background-color: var(--blue6);
+}
+
+.card-footer {
+    font-style: italic;
+    color: rgb(230, 228, 228);
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .flashes{
+    justify-content: center;    
+  }
+  .alert {
+    justify-content: center;
+    text-align: center;
+    width: 60%;
+  }
+
