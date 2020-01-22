@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- css -->
+    <link rel="stylesheet" href="static/input.css" />
+    <!--End css -->
+    <title>Home Page</title>
+</head>
+
+<body onload="myFunction()">
+    <!--<div class="loader" id="loading"><br><span id="fpw">Forecasting!! Please Wait...</span></div>
+    <div class="loading2"id="loading"><br><span id="fpw">Verifying!! Please Wait...</span></div>
+    <div class="loading3"id="loading"><br><span id="fpw">Uploading!! Please Wait...</span></div>
+    <div class="loading4"id="loading"><br><span id="fpw">Displaying!! Please Wait...</span></div> -->
+    <nav class="navbar navbar-expand-lg ">
+        <a class="navbar-brand"><img src="./static/dvastlogo.png" alt="logo loading" /></a>
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="/"><i class="fa fa-fw fa-home fa-lg" alt='Home'></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/downloads/Forecast%20and%20Schedule"><i class="fa fa-download" alt='download'></i></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">username</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                    <a class="dropdown-item" href="logout.php?logout">Log Out</a>
+                </div>
+             </li> 
+        </ul>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+            <div class="alert alert-dismissible alert-{{ category }}">{{ message }}<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container"style="text-align:center;">
+        <br />
+        <div class="bluetop">
+            <h4 style="margin-bottom:2%;">Forecasting and Scheduling </h4>
+            <button class="collapsible"><span>Upload Load File (.xlsx)</span></button>
+                <div class="content">
+                    <div class="row"><br></div>
+                    <div class="row">
+                        <div class="col">
+                            (Load Data, Generating Stations, Hydro profile, Solar profile, Wind profile, Nuclear profile) <br><br>
+                        </div>     
+                        <div class="col">
+                            <form action="/input/upload" method ="POST" enctype="multipart/form-data">
+                                <input type="file" name="datafile" multiple><br><br>
+                                <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Upload" onclick="myLoadingFunction3();">
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row"><br></div>
+                </div>
+            <button class="collapsible"><span>Installed Capacity by 2022</span></button>
+                <div class="content">
+                    <div class="row"><br></div>
+                    <form method="POST" action="/input/installed_capacity">
+                        <div class="row">
+                            <div class="col">
+                                Solar (MW) - 2019:<input type="number" step="0.01" name="solar_ic_cur" value = "1680.74"><br>
+                                Solar (MW) - 2022:<input type="number" step="0.01" name="solar_ic" value = "8020"><br>
+                            </div>     
+                            <div class="col">
+                                Wind (MW) - 2019: <input type="number" step="0.01" name="wind_ic_cur" value = "5955.07"><br>
+                                Wind (MW) - 2022: <input type="number" step="0.01" name="wind_ic" value = "8600"><br>
+                            </div>
+                        </div>
+                        <div class="row-centered">
+                            <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                        </div>
+                    </form>
+                    <div class="row"><br></div>
+                </div>
+            <button class="collapsible"><span>Growth Parameters</span></button>
+                <div class="content">
+                    <div class="row"><br></div>
+                    <form method="POST" action="/input/forecast">
+                        <div class="row">
+                            <div class="col">
+                                Load Growth Rate (%):<input type="number" step="0.01" name="load" value = "6.06"><br>
+                                Solar Growth Rate (%): <input type="number" step="0.01" name="solar" value = "10"><br>
+                            </div>     
+                            <div class="col">
+                                Wind Growth Rate (%): <input type="number" step="0.01" name="wind" value = "10"><br>
+                                Number of years: <input type="number" name="year" value = "15"><br>  
+                            </div>
+                        </div>
+                        <div class="row-centered">
+                            <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                        </div>
+                    </form>
+                    <div class="row"><br></div>
+                </div>
+                
+            <div class = "buttonHolder">
+                <button type="button" class="btn btn-primary btn-lg btn-block" onclick=" window.location.href='/forecast';">Forecast and Dispatch Simulation</button>
+                    
+                <a href ="#">Results </a>
+            </div>
+        </div>
+        <br />
+        <div class="greentop">
+            <h4 style="margin-bottom:2%;">Analysing Benefits from BESS</h4>
+            
+            <button class="collapsible"><span>Bess Parameters</span></button>
+            <div class="content">
+                <div class="row"><br></div>
+                <form method="POST" action="/input/bess_parameters" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col">
+                            Life (years): <input type="number" name="life" value = "15"><br>
+                            Discharge period (hours): <input type="number" name="hour"  value = "2"> <br>
+                            Round-trip efficiency (%): <input type="number" name="rt_efficiency"  value="85"> <br>
+                            DoD<br>Upper limit (%): <input type="number" name="ul" value="97" style="width: 10%;">&emsp;Lower limit (%): <input type="number" name="ll" value="3" style="width: 10%;"><br>
+                        </div>     
+                        <div class="col">
+                            Total number of cycles: <input type="number" name="cycles"  value="7000"> <br>
+                            Cost (₹ / MW): <input type="number" step="0.01" name="cost"  value="70276037"> <br>
+                            Battery Capacity at end of life (%): <input type="number" name="degr"  value="70"> <br>   
+                            Scrap value as % of initial cost (%): <input type="number" name="scrap"  value="10"> <br>
+                            Constant Throughput&emsp;&emsp;&emsp;Yes <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="yesCheck" value = "1">&emsp;No <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="noCheck" value = "0"><br>
+                            <div id="ifYes" style="visibility:hidden">
+                                Rate of reduction in BESS cost (%): <input type="number" name="cost_redn"  value="10"> <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-centered">
+                        <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                    </div>
+                </form>
+                <div class="row"><br></div>
+            </div>
+            
+            <button class="collapsible"><span>Bess Range</span></button>
+            <div class="content">
+                <div class="row"><br></div>
+                <form method="POST" action="/input/bess_size">
+                    <div class="row">
+                        <div class="col">
+                            Start size (MW): <input type="number" name="start" value="10"><br>
+                        </div>     
+                        <div class="col">
+                            End size (MW): <input type="number" name="end" value="50"><br>
+                        </div>
+                        <div class="col">
+                            Increment size (MW): <input type="number" name="incr" value="5"><br>
+                        </div>
+                    </div>
+                    <div class="row-centered">
+                        <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                    </div>
+                </form>
+                <div class="row"><br></div>
+            </div>
+
+<!------------------------------------------------------DJ---------------------------------------------------------->
+<!-------------------- Creating forms to input start and end time for Ramp up time --------------------------------->
+            <!-- Creating a collapsible button to enter into the form within it-->
+            <button class="collapsible"><span>Ramp-up Start and End Time</span></button>
+            <div class="content">
+                <div class="row"><br></div>
+                <!-- Building the form to input the details -->
+                <form method="POST" action="/input/ramp_time">
+                    <div class="row">
+                        <!-- Taking input for the start and the end file -->
+                        <div class="col">
+                            Start Time: <input type="time" name="start_time" value = "16:00"><br>
+                        </div>
+                        <div class="col">
+                            End Time: <input type="time" name="end_time" value = "20:00"><br>
+                        </div>
+                    </div>
+                    <!-- Creating the submit button that will take all the data to the backend-->
+                    <div class="row-centered">
+                        <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                    </div>
+                </form>
+                <div class="row"><br></div>
+            </div>
+<!-------------------------------------------------------DJ--------------------------------------------------------->
+
+            <button class="collapsible"><span>Energy Costs</span></button>
+            <div class="content">
+                <div class="row"><br></div>
+                <form method="POST" action="/input/energy_charge">
+                    <div class="row">
+                        <div class="col">
+                            Cost of costliest generation (₹/kWh): <input type="number" step="0.01" name="peak" value="7.03"><br>
+                            DSM (Cap) Price (₹/kWh): <input type="number" name="dsm"  step="0.01" value="8"> <br>
+                            Rate of increase in EC (y-o-y) (%): <input type="number" name="eci"  step="0.01" value="3"> <br>
+                        </div>     
+                        <div class="col">
+                            Charging Costs - Morning (₹/kWh): <input type="number" step="0.01" name="morn"  value="2.81"> <br>
+                            Charging Costs - Evening (₹/kWh): <input type="number" step="0.01" name="even"  value="3.63"> <br>
+                        </div>
+                    </div>
+                    <div class="row-centered">
+                        <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                    </div>
+                </form>
+                <div class="row"><br></div>
+            </div>
+
+            <button class="collapsible"><span>Financial Parameters</span></button>
+            <div class="content">
+                <div class="row"><br></div>
+                <form method="POST" action="/input/financial_param">
+                    <div class="row">
+                        <div class="col">
+                            Loan Percent (%): <input type="number" step="0.01" name="loan" value="70"><br>
+                            Interest Rate (%): <input type="number" step="0.01" name="interest" value="9"><br>
+                        </div>     
+                        <div class="col">
+                            Tax Rate (%): <input type="number" step="0.01" name="tax" value="25"><br>
+                            Post-tax RoE (%): <input type="number" step="0.01" name="roe" value="14"><br>
+                        </div>
+                        <div class="col">
+                            Discount Rate (%): <input type="number" step="0.01" name="discount" value="8.925"><br>
+                            Operating Expense (%): <input type="number"step="0.01"  name="opex" value="1"><br>
+                        </div>
+                    </div>
+                    <div class="row-centered">
+                        <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                    </div>
+                </form>
+                <div class="row"><br></div>
+            </div>
+
+            <button class="collapsible"><span>Other Benefits</span></button>
+            <div class="content">
+                <div class="row"><br></div>
+                <form method="POST" action="/input/other_benefits">
+                    <div class="row-centered">
+                        <h6>Capacity Deferral</h6>
+                        <div class="col">
+                            Transformer Cost (₹): <input type="number" step="0.01" name="trans_cost" value="1300000"><br>
+                            Transformer interest (%): <input type="number" step="0.01" name="trans_int"  value="11"> <br>
+                        </div>     
+                        <div class="col">
+                            Land cost (₹): <input type="number" step="0.01" name="land_cost"  value="215278"> <br>
+                            Transformer Land required: <input type="number" step="0.01" name="land_req"  value="20"> <br>
+                        </div>
+                    </div>
+                    <div class="row-centered">
+                        <div class="col">
+                            <h6>Outage Reduction</h6>
+                            No of hours of outage: <input type="number" step="0.01" name="outage" value="20"><br>
+                            Average Peak tariff (₹/kWh): <input type="number" step="0.01" name="tariff"  value="7"> <br>
+                        </div>     
+                        <div class="col">
+                            <h6>Transmission Reduction</h6>
+                            Transmission reduction savings (₹): <input type="number" step="0.01" name="trans_save"  value="2000000"> <br>
+                        </div>
+                    </div>
+
+                    <div class="row-centered">
+                        <input type="submit" class="btn btn-sm btn-primary" name="submit" value="Submit">
+                    </div>
+                </form>
+                <div class="row"><br></div>
+            </div>
+
+            <div class = "buttonHolder">
+                <button type="button" class="btn btn-primary btn-lg btn-block" onclick=" window.location.href='/analysis';">Analysis</button>
+                <a href ="#">Results </a>
+        </div>
+    </div>
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } 
+            });
+        }
+
+        function yesnoCheck() {
+        if (document.getElementById('yesCheck').checked) {
+            document.getElementById('ifYes').style.visibility = 'visible';
+        }
+        else document.getElementById('ifYes').style.visibility = 'hidden';
+
+}
+    </script>
+
+    <!-- ----------for preloader display-------------- -->
+    <script type="text/javascript">
+/*        var preloader=document.getElementById('loading');
+        var preloader2=document.getElementById('loading2');
+        var preloader3=document.getElementById('loading3');
+        var preloader4=document.getElementById('loading4');     
+        function myLoadingFunction() {
+            preloader.style.display="block";
+        }
+        function myLoadingFunction2() {
+            preloader2.style.display="block";
+        }
+        function myLoadingFunction3() {
+            preloader3.style.display="block";
+        }
+        function myLoadingFunction4() {
+            preloader4.style.display="block";
+        }
+        function myFunction(){
+            preloader4.style.display='none';
+            preloader3.style.display='none';
+            preloader2.style.display='none';
+            preloader.style.display='none'; */
+        }                                       
+    </script>
+        
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>
