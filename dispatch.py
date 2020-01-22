@@ -187,8 +187,8 @@ def dispatch_sim(plants, net_schedule, year, src):
     tech_min = np.asarray(plants['Tech Minimum (%)'])
     ramp = np.asarray(plants['Ramp Rate (MW/min)'])
     ic = np.asarray(plants['DC (MW)'])
-    plant_type = np.asarray(plant["Type"])
-    energy_year = np.asarray(plant["Energy (MWh)"])
+    plant_type = np.asarray(plants["Type"])
+    energy_year = np.asarray(plants["Energy (MWh)"])
     energy = ic * 0
 
     net_schedule = net_schedule.iloc[:, 0:365]
