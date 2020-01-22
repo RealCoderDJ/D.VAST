@@ -1,0 +1,21 @@
+:root {
+  --gray: #707070;
+  --red: #EC1D26;
+  --black: #000000;
+  --blue: #489DFF;
+  --darkblue: #134AFF;
+  --white: #fff;
+  --light-gray: #F5F5F5;
+  --violet: #15174E;
+  --skyblue: #6C63FF;
+  --deloittegreen: #86bc24;
+  --deloittegreen_dark: #6c9e0e;
+  --deloittegreen_50: #87bc247e;
+  --deloittegreen_70: #87bc244b;
+  --blue3: rgb(0, 163, 224);
+  --blue350: rgba(0, 164, 224, 0.651);
+  --teal5: #0097A9;
+  --teal550: rgba(0, 152, 169, 0.5);
+  --blue6: #012169;
+  --blue650: #01206980;
+}
