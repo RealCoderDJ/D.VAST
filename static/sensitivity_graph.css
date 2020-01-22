@@ -1,0 +1,39 @@
+@import "./var.css";
+@import "./style.css";
+@import "./table.css";
+
+body{
+    overflow-x: hidden;
+}
+div.container-fluid{
+    justify-content: center;
+    max-width:90%; 
+    max-height: 100%;
+    margin:auto;
+    align-content: middle;
+}
+
+.row {
+    align-content: center;
+}
+
+.left-half {
+    float: left;
+    width: 55%;
+    height: 100%
+}
+
+
+.right-half {
+    background-color: black;
+    justify-content: center;
+    float: left;
+    width: 45%;
+    height: 100%;
+    margin:auto;
+    align-content: middle;
+}
+
+embed {
+    justify-content: center;
+}

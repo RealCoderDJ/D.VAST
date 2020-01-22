@@ -1,0 +1,72 @@
+@import "./var.css";
+@import "./style.css";
+
+.collapsible {
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    padding: 1%;
+    margin: 0%;
+    vertical-align: middle;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    content: '\02795';
+  }
+  
+  .active, .collapsible:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  
+  .collapsible:after {
+    content: '\2796';
+    color: rgba(255, 255, 255, 1);
+    
+    float: right;
+    margin: 0.2%;
+  }
+  
+  .collapsible:active:after {
+    content: "\2796";
+    color: rgba(255, 255, 255, 1);
+  }
+  
+  .content {
+    padding:  0 18px;
+    margin: 0%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: transparent;
+  }
+
+span {
+    width:50%;
+    font-size: large;
+    vertical-align: middle;
+}
+
+::-webkit-input-placeholder { /* Edge */
+    text-align: right;
+    color:rgba(255, 255, 255, 0.75);
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    text-align: right;
+    color:rgba(255, 255, 255, 0.75);
+  }
+  
+  ::placeholder {
+    text-align: left;
+    color:rgba(255, 255, 255, 0.75);
+  }
+
+  input[type=number] {
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid var(--white) !important;
+    color: var(--white);
+    width: 75%;
+    margin-bottom: 2.5%;
+}
