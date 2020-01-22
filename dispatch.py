@@ -3,8 +3,11 @@ import numpy as np
 import os
 
 
-def clearing_first_slot_first_day(ic, energy_demand, tech_min, ramp, ramp_time):
+def clearing_first_slot_first_day(ic, energy_demand, tech_min, ramp, ramp_time, plant_type, energy_year,total_slots_left):
     dc = ic
+    for p in range(len(plant_type)):
+        if plant_type[p] == "GAS":
+            dc[p] = energy_year[p]/total_slots_left
     flag = True
     clearing = dc.copy()
     unmet = 0
@@ -50,11 +53,20 @@ def clearing_first_slot_first_day(ic, energy_demand, tech_min, ramp, ramp_time):
             flag = False
         i -= 1
     lra = i + 1  # index of last plant
-    return clearing, unmet, lra
+    for p in range(len(dc)):
+        if plant_type[p] == "GAS":
+            if clearing[p] != 0:
+                energy_year[p] = energy_year[p] - clearing[p]
+
+    return clearing, unmet, lra, energy_year
 
 
-def clearing_any_other_slot(ic, energy, new_total_energy_required, previous_energy_clearing, tech_min, ramp, ramp_time):
+def clearing_any_other_slot(ic, energy, new_total_energy_required, previous_energy_clearing, tech_min, ramp, ramp_time,plant_type, energy_year,total_slots_left):
     dc = ic
+    for p in range(len(plant_type)):
+        if plant_type[p] == "GAS":
+            dc[p] = energy_year[p]/total_slots_left
+
 
     max_energy_rampup = ramp * ramp_time
     max_energy_rampdown = ramp * ramp_time
@@ -161,7 +173,13 @@ def clearing_any_other_slot(ic, energy, new_total_energy_required, previous_ener
             flag = False
         i -= 1
     new_last_cleared_plant_index = i + 1  # index of last plant
-    return new_energy_clearing, unmet, new_last_cleared_plant_index
+
+    for p in range(len(dc)):
+        if plant_type[p] == "GAS":
+            if new_energy_clearing[p] != 0:
+                energy_year[p] = energy_year[p] - new_energy_clearing[p]
+
+    return new_energy_clearing, unmet, new_last_cleared_plant_index, energy_year
 
 
 def dispatch_sim(plants, net_schedule, year, src):
@@ -169,6 +187,8 @@ def dispatch_sim(plants, net_schedule, year, src):
     tech_min = np.asarray(plants['Tech Minimum (%)'])
     ramp = np.asarray(plants['Ramp Rate (MW/min)'])
     ic = np.asarray(plants['DC (MW)'])
+    plant_type = np.asarray(plant["Type"])
+    energy_year = np.asarray(plant["Energy (MWh)"])
     energy = ic * 0
 
     net_schedule = net_schedule.iloc[:, 0:365]
@@ -177,18 +197,22 @@ def dispatch_sim(plants, net_schedule, year, src):
     unmet_matrix *= 0
 
     ramp_time = (24 * 60) / len(net_schedule.index)
-
+    total_slots_left = net_schedule.columns.size*net_schedule.index.size
     for day in range(net_schedule.columns.size):
         for slot in range(net_schedule.index.size):
             if day == 0 and slot == 0:
-                last_cl, unmet, last_plant = clearing_first_slot_first_day(ic, net_demand[slot, day],
-                                                                           tech_min, ramp, ramp_time)
+
+                last_cl, unmet, last_plant, energy_year = clearing_first_slot_first_day(ic, net_demand[slot, day],
+                                                                           tech_min, ramp, ramp_time, plant_type, energy_year, total_slots_left)
                 unmet_matrix[slot, day] = unmet
+                total_slots_left = total_slots_left-1
 
             else:
-                last_cl, unmet, last_plant = clearing_any_other_slot(ic, energy, net_demand[slot, day], last_cl,
-                                                                     tech_min, ramp, ramp_time)
+
+                last_cl, unmet, last_plant, energy_year = clearing_any_other_slot(ic, energy, net_demand[slot, day], last_cl,
+                                                                     tech_min, ramp, ramp_time, plant_type, energy_year, total_slots_left)
                 unmet_matrix[slot, day] = unmet
+                total_slots_left = total_slots_left - 1
 
     # -------------------------------------------DJ------------------------------------------------------#
     # To generate the maximum possible ramp up capacity when the demand exceeds the generation
