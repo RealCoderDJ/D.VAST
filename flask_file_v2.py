@@ -91,6 +91,7 @@ def installed_capacity():
 
         return redirect(url_for('input_page'))
 
+
 @app.route('/input/forecast', methods=['POST', 'GET'])
 def input_forecast():
     if request.method == 'POST':
@@ -110,7 +111,6 @@ def input_forecast():
 @app.route('/forecast', methods=['POST', 'GET'])
 def forecast_scheduling():
     global list_unmet_df, list_ramp_req_df, df_load_schedule, df_unmet
-    # list_unmet_df, list_ramp_req_df, df_load_schedule, df_unmet = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
     list_unmet_df, list_ramp_req_df = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
 
     flash("Forecast and Dispatch Simulations Done!", "success")

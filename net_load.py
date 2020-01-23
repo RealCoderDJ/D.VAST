@@ -2,7 +2,8 @@ import pandas as pd
 import os
 
 
-def net_load(schedule, solar, nuclear, wind, hydro, biomass, year, load_growth, solar_growth, wind_growth, src):
+def net_load(schedule, solar, nuclear, wind, hydro, biomass, power_purchase, year,
+             load_growth, solar_growth, wind_growth, src):
     directory = os.path.join(src, "Working Files")
     os.chdir(directory)
 
@@ -12,7 +13,7 @@ def net_load(schedule, solar, nuclear, wind, hydro, biomass, year, load_growth, 
     net_schedule = schedule.copy()
 
     # Subtracting the RE generation from implemented schedule
-    net_schedule -= (nuclear + hydro + solar + wind + biomass)
+    net_schedule -= (nuclear + hydro + solar + wind + biomass + power_purchase)
 
     writer = pd.ExcelWriter("Net_Schedule_" + str(year + 1) + ".xlsx", engine="xlsxwriter")
     net_schedule.to_excel(writer, sheet_name="Sheet1")
