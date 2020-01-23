@@ -238,6 +238,7 @@ def dispatch_sim(plants, net_schedule, year, src):
             #                dispatch.loc[iterator] = clearing_list
             #                energy_year_df.loc[iterator] = energy_year
             #                dc_df.loc[iterator] = dc
+                 net_demand_old = net_demand[slot, day]
 
             else:
 
