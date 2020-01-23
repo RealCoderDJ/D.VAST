@@ -67,7 +67,10 @@ def clearing_first_slot_first_day(ic, energy_demand, tech_min, ramp, ramp_time, 
 def clearing_any_other_slot(ic, energy, new_total_energy_required, previous_energy_clearing, tech_min, ramp, ramp_time,
                             plant_type, energy_year, total_slots_left, net_demand_old):
     dc = ic.copy()
-    demand_change = (new_total_energy_required - net_demand_old) / net_demand_old
+    if new_total_energy_required < 0 or net_demand_old < 0:
+        demand_change = -1
+    else:
+        demand_change = (new_total_energy_required - net_demand_old) / net_demand_old
     energy_slot = energy_year / total_slots_left
     for p in range(len(plant_type)):
         if plant_type[p] == "GAS":
@@ -219,7 +222,7 @@ def dispatch_sim(plants, net_schedule, year, src):
     total_slots_left = 365 * 24
     net_demand_old = 0
     for day in range(net_schedule.columns.size):
-        print(day)
+        # print(day)
         for slot in range(net_schedule.index.size):
             if day == 0 and slot == 0:
 
@@ -256,53 +259,37 @@ def dispatch_sim(plants, net_schedule, year, src):
 
             iterator += 1
         # -------------------------------------------DJ------------------------------------------------------
-        # To generate the maximum possible ramp up capacity when the demand exceeds the generation
-        net_demand_adapted_for_max_generation = net_demand.copy()  # Copy net_demand to keep the original file intact
-        generation_power_availability_for_supply = 1  # To denote the ratio of power available to power generated
-        generation_matrix = net_demand_adapted_for_max_generation - unmet_matrix  # Total demand matrix
-        max_generation = generation_power_availability_for_supply * sum(ic)
+    # To generate the maximum possible ramp up capacity when the demand exceeds the generation
+    net_demand_adapted_for_max_generation = net_demand.copy()  # Copy net_demand to keep the original file intact
+    generation_power_availability_for_supply = 1  # To denote the ratio of power available to power generated
+    generation_matrix = net_demand_adapted_for_max_generation - unmet_matrix  # Total demand matrix
+    max_generation = generation_power_availability_for_supply * sum(ic)
 
-        # Limiting new demand so that only max generation capacity can be the maximum demand
-        net_demand_adapted_for_max_generation[net_demand_adapted_for_max_generation > max_generation] = max_generation
-        generation_matrix[generation_matrix > max_generation] = max_generation  # Nirmal Addition
+    # Limiting new demand so that only max generation capacity can be the maximum demand
+    net_demand_adapted_for_max_generation[net_demand_adapted_for_max_generation > max_generation] = max_generation
+    generation_matrix[generation_matrix > max_generation] = max_generation  # Nirmal Addition
 
-        # Total ramp up required to reach the max generation capacity
-        ramp_up_matrix = net_demand_adapted_for_max_generation - generation_matrix
+    # Total ramp up required to reach the max generation capacity
+    ramp_up_matrix = net_demand_adapted_for_max_generation - generation_matrix
 
-        # Procedures to store the ramp up data in a new sheet of the excel workbook
-        ramp_up_matrix_df = pd.DataFrame(ramp_up_matrix)
-        ramp_up_matrix_df.columns = net_schedule.columns
-        ramp_up_matrix_df.index = net_schedule.index
+    # Procedures to store the ramp up data in a new sheet of the excel workbook
+    ramp_up_matrix_df = pd.DataFrame(ramp_up_matrix)
+    ramp_up_matrix_df.columns = net_schedule.columns
+    ramp_up_matrix_df.index = net_schedule.index
 
-        os.chdir(os.path.join(src, "Working Files"))
-        writer = pd.ExcelWriter("Ramp_up_" + str(year + 1) + ".xlsx", engine="xlsxwriter")
-        ramp_up_matrix_df.to_excel(writer, sheet_name="sheet2")
-        writer.save()
-        # ---------------------------------------------DJ-------------------------------------------------------#
-        unmet_df = pd.DataFrame(unmet_matrix)
-        unmet_df.columns = net_schedule.columns
-        unmet_df.index = net_schedule.index
+    os.chdir(os.path.join(src, "Working Files"))
+    writer = pd.ExcelWriter("Ramp_up_" + str(year + 1) + ".xlsx", engine="xlsxwriter")
+    ramp_up_matrix_df.to_excel(writer, sheet_name="sheet2")
+    writer.save()
+    # ---------------------------------------------DJ-------------------------------------------------------#
+    unmet_df = pd.DataFrame(unmet_matrix)
+    unmet_df.columns = net_schedule.columns
+    unmet_df.index = net_schedule.index
 
-        os.chdir(os.path.join(src, "Working Files"))
-        writer = pd.ExcelWriter("Unmet_" + str(year + 1) + ".xlsx", engine="xlsxwriter")
-        unmet_df.to_excel(writer, sheet_name="sheet1")
-        writer.save()
-
-    #    os.chdir(r"C:\Users\utkakumar\Documents\Projects\World Bank Battery\codes\D.VAST-master\uploads")
-    #    #writer = pd.ExcelWriter("Unmet_" + str(year + 1) + ".xlsx", engine="xlsxwriter")
-    #    #unmet_df.to_excel(writer, sheet_name="sheet1")
-    #    #writer.save()
-    #
-    #    writer2 = pd.ExcelWriter("dispatch2.xlsx", engine="xlsxwriter")
-    #    dispatch.to_excel(writer2, sheet_name="sheet1")
-    #    writer2.save()
-    #    writer3 = pd.ExcelWriter("energy_yaer.xlsx", engine="xlsxwriter")
-    #    energy_year_df.to_excel(writer3, sheet_name="sheet1")
-    #    writer3.save()
-    #
-    #    writer4 = pd.ExcelWriter("dc.xlsx", engine="xlsxwriter")
-    #    dc_df.to_excel(writer4, sheet_name="sheet1")
-    #    writer4.save()
+    os.chdir(os.path.join(src, "Working Files"))
+    writer = pd.ExcelWriter("Unmet_" + str(year + 1) + ".xlsx", engine="xlsxwriter")
+    unmet_df.to_excel(writer, sheet_name="sheet1")
+    writer.save()
 
     return unmet_df, ramp_up_matrix_df
 

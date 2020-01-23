@@ -60,7 +60,8 @@ def least_cost_dispatch(directory, input_values, src):
             wind_growth = (wind_2022 / wind_cur) ** (1/3)
         else:
             solar_growth = temp_solar_growth
-            wind_growth = temp_wind_growth
+            if wind_growth > temp_wind_growth:
+                wind_growth = temp_wind_growth
         start_net_load = timer()
         net_schedule = net_load(schedule, solar, nuclear, wind, hydro, biomass, power_purchase, year,
                                 load_growth, solar_growth, wind_growth, src)

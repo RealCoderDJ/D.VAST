@@ -85,7 +85,7 @@ def installed_capacity():
         solar_ic = float(request.form['solar_ic'])
         wind_ic = float(request.form['wind_ic'])
         solar_ic_cur = float(request.form['solar_ic_cur'])
-        wind_ic_cur = float(request.form['solar_ic_cur'])
+        wind_ic_cur = float(request.form['wind_ic_cur'])
 
         input_values.set_re_ic(solar_ic, wind_ic, solar_ic_cur, wind_ic_cur)
 
