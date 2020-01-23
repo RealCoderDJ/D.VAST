@@ -304,6 +304,6 @@ def dispatch_sim(plants, net_schedule, year, src):
     #    dc_df.to_excel(writer4, sheet_name="sheet1")
     #    writer4.save()
 
-    return unmet_df
+    return unmet_df, ramp_up_matrix_df
 
 
