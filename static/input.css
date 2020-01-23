@@ -1,6 +1,39 @@
 @import "./var.css";
 @import "./style.css";
 
+.progress_bar {
+        background_color: #ddd;
+        width = 75%;
+        horizontal-align: middle;
+        padding: 1%;
+        display:none;
+        z-index: -1;
+        position:relative;
+}
+
+.myBar {
+        width: 0%;
+        height: 30px;
+        background-color: #4CAF50;
+        display:none;
+        z-index: -1;
+        position:relative;
+}
+
+.prlabel {
+    font-size: 15px;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: white;
+    font-family: "Georgia", serif;
+    color: transparent;
+    display: none;
+    margin: auto;
+    width: 50%;
+    z-index: -1;
+    position:relative;
+    }
+
 .collapsible {
     background-color: transparent;
     color: white;
