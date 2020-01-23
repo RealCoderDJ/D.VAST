@@ -11,9 +11,11 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- css -->
-    <link rel="stylesheet" href="static/input.css" />
+    <link rel="stylesheet"  type="text/css" href="static/input.css" />
     <!--End css -->
     <title>Home Page</title>
+
+
 </head>
 
 <body onload="myFunction()">
@@ -50,7 +52,14 @@
         {% endif %}
     {% endwith %}
 
-    <div class="container"style="text-align:center;">
+   <div class = "progress_bar">
+        <br />
+       <div class = "mybar"></div>
+   </div>
+    <div class ="prlabel">
+        <input type = "button" onclick="moving()" value="Progress Bar">
+    </div>
+    <div class="container" style="text-align:center;">
         <br />
         <div class="bluetop">
             <h4 style="margin-bottom:2%;">Forecasting and Scheduling </h4>
@@ -76,8 +85,8 @@
                     <form method="POST" action="/input/installed_capacity">
                         <div class="row">
                             <div class="col">
-                                Solar (MW) - 2019:<input type="number" step="0.01" name="solar_ic_cur" value = "1680.74"><br>
-                                Solar (MW) - 2022:<input type="number" step="0.01" name="solar_ic" value = "8020"><br>
+                                Solar (MW) - 2019: <input type="number" step="0.01" name="solar_ic_cur" value = "1680.74"><br>
+                                Solar (MW) - 2022: <input type="number" step="0.01" name="solar_ic" value = "8020"><br>
                             </div>     
                             <div class="col">
                                 Wind (MW) - 2019: <input type="number" step="0.01" name="wind_ic_cur" value = "5955.07"><br>
@@ -97,11 +106,11 @@
                         <div class="row">
                             <div class="col">
                                 Load Growth Rate (%):<input type="number" step="0.01" name="load" value = "6.06"><br>
-                                Solar Growth Rate (%): <input type="number" step="0.01" name="solar" value = "10"><br>
+                                Solar Growth Rate (%): <input type="number" step="0.01" name="solar" value = "20"><br>
                             </div>     
                             <div class="col">
-                                Wind Growth Rate (%): <input type="number" step="0.01" name="wind" value = "10"><br>
-                                Number of years: <input type="number" name="year" value = "15"><br>  
+                                Wind Growth Rate (%): <input type="number" step="0.01" name="wind" value = "20"><br>
+                                Number of years: <input type="number" name="year" value = "30"><br>
                             </div>
                         </div>
                         <div class="row-centered">
@@ -302,20 +311,41 @@
         }
 
         function yesnoCheck() {
-        if (document.getElementById('yesCheck').checked) {
-            document.getElementById('ifYes').style.visibility = 'visible';
+            if (document.getElementById('yesCheck').checked) {
+                document.getElementById('ifYes').style.visibility = 'visible';
+            }
+            else document.getElementById('ifYes').style.visibility = 'hidden';
         }
-        else document.getElementById('ifYes').style.visibility = 'hidden';
 
-}
-    </script>
+        var rate = 5;
 
-    <!-- ----------for preloader display-------------- -->
-    <script type="text/javascript">
+        function moving() {
+            document.getElementByClassName('myBar').innerHTML = "Code";
+            var elem = document.getElementByClassName("myBar");
+            document.getElementByClassName('myBar').style.display = "block";
+            document.getElementByClassName('progress_bar').style.display = "block";
+            document.getElementByClassName('prlabel').style.display = "block";
+            var width = 0;
+            var id = setInterval(frame, 10);
+
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(id);
+                }
+                else {
+                    width++;
+                    elem.style.width = width + '%';
+                    document.getElementByClassName('prlabel').innerHTML = width * 1 + '%';
+                }
+            }
+        }
+</script>
+        <script>
+
 /*        var preloader=document.getElementById('loading');
         var preloader2=document.getElementById('loading2');
         var preloader3=document.getElementById('loading3');
-        var preloader4=document.getElementById('loading4');     
+        var preloader4=document.getElementById('loading4');
         function myLoadingFunction() {
             preloader.style.display="block";
         }
