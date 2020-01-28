@@ -232,13 +232,13 @@ def dispatch_sim(plants, net_schedule, year, src):
                                                                                             total_slots_left)
                 unmet_matrix[slot, day] = unmet
                 total_slots_left = total_slots_left - 1
+                net_demand_old = net_demand[slot, day]
             #                last_cl_list.append(last_cl)
             #                energy_list.append(energy_year)
             #                clearing_list = list(last_cl) + [net_demand[slot, day]]
             #                dispatch.loc[iterator] = clearing_list
             #                energy_year_df.loc[iterator] = energy_year
             #                dc_df.loc[iterator] = dc
-                 net_demand_old = net_demand[slot, day]
 
             else:
 
@@ -272,6 +272,7 @@ def dispatch_sim(plants, net_schedule, year, src):
 
     # Total ramp up required to reach the max generation capacity
     ramp_up_matrix = net_demand_adapted_for_max_generation - generation_matrix
+    ramp_up_matrix[ramp_up_matrix<0] = 0
 
     # Procedures to store the ramp up data in a new sheet of the excel workbook
     ramp_up_matrix_df = pd.DataFrame(ramp_up_matrix)

@@ -7,7 +7,7 @@ def net_load(schedule, solar, nuclear, wind, hydro, biomass, power_purchase, yea
     directory = os.path.join(src, "Working Files")
     os.chdir(directory)
 
-    if year == 2:
+    if year == 3:
         print("hello")
     schedule = schedule * (load_growth ** year)
     solar = solar * (solar_growth ** year)

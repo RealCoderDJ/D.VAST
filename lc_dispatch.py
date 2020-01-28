@@ -56,7 +56,7 @@ def least_cost_dispatch(directory, input_values, src):
         print("Year ", str(year + 1))
 
         if year <= 2:
-            solar_growth = (solar_2022 / solar_cur) ** (1/3)
+            # solar_growth = (solar_2022 / solar_cur) ** (1/3)
             wind_growth = (wind_2022 / wind_cur) ** (1/3)
         else:
             solar_growth = temp_solar_growth
