@@ -41,7 +41,7 @@ df_size_npv = pd.DataFrame()
 # TODO loading screens
 
 # Function to input ramp up time to select the specific time slot in the system
-@app.route('/input/ramp_time', methods=['POST', 'GET'])
+@app.route('/input/ramp_time', methods = ['POST', 'GET'])
 def ramp_up_time_calculation():
     if request.method == 'POST':
         # Extracting inputs from the 'input' html page given by the user
@@ -50,7 +50,7 @@ def ramp_up_time_calculation():
         input_values.set_ramp_up_time_selection(start_time, end_time)
         print(input_values.ramp_up_start_time, input_values.ramp_up_end_time)
 
-    return redirect(url_for('input_page', flag=0))
+    return redirect(url_for('input_page'))
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -61,7 +61,7 @@ def home():
 @app.route('/input', methods=["GET", "POST"])
 def input_page():
     # Do Input
-    return render_template('input.html', input_done=input_done, model_run=model_run)
+    return render_template('input.html', input_done=input_done, model_run=model_run, flag=0)
 
 
 @app.route('/input/upload', methods=['POST', 'GET'])
@@ -75,7 +75,7 @@ def input_upload():
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         flash("File uploaded successfully as: " + filename, "success")
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
 
 
 @app.route('/input/installed_capacity', methods=['POST', 'GET'])
@@ -89,7 +89,7 @@ def installed_capacity():
 
         input_values.set_re_ic(solar_ic, wind_ic, solar_ic_cur, wind_ic_cur)
 
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
 
 
 @app.route('/input/forecast', methods=['POST', 'GET'])
@@ -105,20 +105,18 @@ def input_forecast():
         input_values.set_growth_rates([load, solar, wind])
         print(input_values.load_growth, input_values.solar_growth, input_values.wind_growth, input_values.years)
 
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
 
 
-#   -----------------------------------------------DJ's edit-----------------------------------------------------------
 @app.route('/forecast', methods=['POST', 'GET'])
 def forecast_scheduling():
     global list_unmet_df, list_ramp_req_df, df_load_schedule, df_unmet
-    rendered = Flask.render_template('input_page', flag=1)
+    flash('Please wait while the data is being processed')
     list_unmet_df, list_ramp_req_df = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
+    rendered = Flask.render_template("input.html", flag=1)
+
     flash("Forecast and Dispatch Simulations Done!", "success")
-    return redirect(url_for('input_page'), flag=0)
-
-
-#  --------------------------------DJ's edit----------------------------------------------------------------------
+    return redirect(url_for('input_page'))
 
 
 @app.route('/input/bess_parameters', methods=['POST', 'GET'])
@@ -151,7 +149,7 @@ def input_bess_parameters():
 
         print(input_values.cost_2hr, input_values.hours, input_values.degr, input_values.dod)
 
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
 
 
 @app.route('/input/bess_size', methods=['POST', 'GET'])
@@ -166,7 +164,7 @@ def input_bess_size():
 
         print(input_values.bess_size_start, input_values.bess_size_end, input_values.bess_size_incr)
 
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
 
 
 @app.route('/input/energy_charge', methods=['POST', 'GET'])
@@ -186,7 +184,7 @@ def input_energy_charge():
 
         print(input_values.costs)
 
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
 
 
 @app.route('/input/financial_param', methods=['POST', 'GET'])
@@ -205,7 +203,7 @@ def input_financial_param():
 
         print(input_values.roe)
 
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
 
 
 @app.route('/input/other_benefits', methods=['POST', 'GET'])
@@ -224,10 +222,9 @@ def input_other_benefits():
         input_values.set_outage_param(average_tariff, total_outage)
         input_values.set_transmission_reduction(transmission_reduction)
 
-        print(input_values.transformer_cost, input_values.transformer_interest, input_values.land_cost,
-              input_values.trans_land_req)
+        print(input_values.transformer_cost, input_values.transformer_interest, input_values.land_cost, input_values.trans_land_req)
 
-        return redirect(url_for('input_page', flag=0))
+        return redirect(url_for('input_page'))
     # TODO Input forms
 
 
@@ -310,7 +307,7 @@ def sensitivity_graph(size):
         graph.add(c, npv_list)
         l = len(npv_list)
         viable_cost = cost_crore[l - 1] - npv_list[l - 1] * (
-                (cost_crore[l - 1] - cost_crore[0]) / (npv_list[l - 1] - npv_list[0]))
+                    (cost_crore[l - 1] - cost_crore[0]) / (npv_list[l - 1] - npv_list[0]))
         viable_cost = round(viable_cost / 10000000, 2)
         viable_list.append(viable_cost)
     df_viable['RoE Percent (Post-tax)'] = cols
@@ -425,7 +422,7 @@ def select_size(size):
 
 @app.route('/downloads/<dwnld>', methods=['GET', 'POST'])
 def select_download(dwnld):
-    downloads = ['Forecast and Schedule', 'BESS Analysis']  # , 'BESS Sensitivity Analysis']
+    downloads = ['Forecast and Schedule', 'BESS Analysis'] #, 'BESS Sensitivity Analysis']
 
     if dwnld == 'Forecast and Schedule':
         df = download_tables.forecast_table(input_values)
