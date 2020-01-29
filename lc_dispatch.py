@@ -27,6 +27,7 @@ def least_cost_dispatch(directory, input_values, src):
     wind = data.parse("Wind Generation", index_col=0)
     hydro = data.parse("Hydro Generation", index_col=0)
     plants = data.parse("Generating Stations", index_col=0)
+    power_purchase = data.parse("Power Purchase", index_col=0)
 
     load_growth, solar_growth, wind_growth = input_values.get_growth_rates()
     solar_2022, wind_2022, solar_cur, wind_cur = input_values.get_re_ic()
@@ -54,13 +55,14 @@ def least_cost_dispatch(directory, input_values, src):
         print("Year ", str(year + 1))
 
         if year <= 2:
-            solar_growth = (solar_2022 / solar_cur) ** (1/3)
+            # solar_growth = (solar_2022 / solar_cur) ** (1/3)
             wind_growth = (wind_2022 / wind_cur) ** (1/3)
         else:
             solar_growth = temp_solar_growth
-            wind_growth = temp_wind_growth
+            if wind_growth > temp_wind_growth:
+                wind_growth = temp_wind_growth
         start_net_load = timer()
-        net_schedule = net_load(schedule, solar, nuclear, wind, hydro, biomass, year,
+        net_schedule = net_load(schedule, solar, nuclear, wind, hydro, biomass, power_purchase, year,
                                 load_growth, solar_growth, wind_growth, src)
         end_net_load = timer()
         print("Time taken for calculating Net Load ", str(end_net_load - start_net_load), "s")  # Time in seconds

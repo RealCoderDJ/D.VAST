@@ -2,10 +2,13 @@ import pandas as pd
 import os
 
 
-def net_load(schedule, solar, nuclear, wind, hydro, biomass, year, load_growth, solar_growth, wind_growth, src):
+def net_load(schedule, solar, nuclear, wind, hydro, biomass, power_purchase, year,
+             load_growth, solar_growth, wind_growth, src):
     directory = os.path.join(src, "Working Files")
     os.chdir(directory)
 
+    if year == 3:
+        print("hello")
     schedule = schedule * (load_growth ** year)
     solar = solar * (solar_growth ** year)
     wind = wind * (wind_growth ** year)
