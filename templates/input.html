@@ -18,7 +18,7 @@
 
 </head>
 
-<body>
+<body onload="refreshoverlaying();">
     <nav class="navbar navbar-expand-lg ">
         <a class="navbar-brand"><img src="./static/dvastlogo.png" alt="logo loading" /></a>
         <ul class="nav navbar-nav ml-auto">
@@ -51,7 +51,10 @@
    <div class = "overlay">
         <br />
    </div>
-    <div class = "overlay_text">Please wait while the data is processed
+
+    <div class = "overlay_text">
+        <div class = "loading"></div>
+        Please wait ...<br /> The data is being processed
     </div>
     <div class="container" style="text-align:center;">
         <br />
@@ -115,7 +118,7 @@
                 </div>
 
             <div class = "buttonHolder">
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick=" window.location.href='/forecast';">Forecast and Dispatch Simulation</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" onclick=" window.location.href='/forecast'; overlaying();">Forecast and Dispatch Simulation</button>
 
                 <a href ="#">Results </a>
             </div>
@@ -288,67 +291,9 @@
         </div>
     </div>
 
-    <script>
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
 
-        for (i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.maxHeight){
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
-            });
-        }
-
-        function yesnoCheck() {
-            if (document.getElementById('yesCheck').checked) {
-                document.getElementById('ifYes').style.visibility = 'visible';
-            }
-            else document.getElementById('ifYes').style.visibility = 'hidden';
-        }
-
-  /*      var overlay_display = {{flag}};
-
-        if (overlay_display == 0){
-            document.getElementByClassName("overlay").style.visibility = "visible";
-            document.getElementByClassName("overlay_text").style.visibility = "visible";
-        }
-        else {
-            document.getElementByClassName("overlay").style.visibility = "hidden";
-            document.getElementByClassName("overlay_text").style.visibility = "hidden";
-        }
-   */
-
-</script>
-        <script>
-
-/*        var preloader=document.getElementById('loading');
-        var preloader2=document.getElementById('loading2');
-        var preloader3=document.getElementById('loading3');
-        var preloader4=document.getElementById('loading4');
-        function myLoadingFunction() {
-            preloader.style.display="block";
-        }
-        function myLoadingFunction2() {
-            preloader2.style.display="block";
-        }
-        function myLoadingFunction3() {
-            preloader3.style.display="block";
-        }
-        function myLoadingFunction4() {
-            preloader4.style.display="block";
-        }
-        function myFunction(){
-            preloader4.style.display='none';
-            preloader3.style.display='none';
-            preloader2.style.display='none';
-            preloader.style.display='none'; */
-        }
-    </script>
+    <!-- Main JavaScript File -->
+        <script src = "static/input.js"></script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -361,6 +306,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
+
 </body>
 
 </html>
