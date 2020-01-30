@@ -1,4 +1,5 @@
 import os
+import webbrowser
 
 import pandas as pd
 import pygal
@@ -442,6 +443,8 @@ def return_file(name):
     return send_from_directory(working_files, name, as_attachment=True)
     # return name
 
+
+webbrowser.open('http://127.0.0.1:5000/', new=1)
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)
