@@ -41,7 +41,7 @@ df_size_npv = pd.DataFrame()
 # TODO loading screens
 
 # Function to input ramp up time to select the specific time slot in the system
-@app.route('/input/ramp_time', methods = ['POST', 'GET'])
+@app.route('/input/ramp_time', methods=['POST', 'GET'])
 def ramp_up_time_calculation():
     if request.method == 'POST':
         # Extracting inputs from the 'input' html page given by the user
@@ -61,7 +61,7 @@ def home():
 @app.route('/input', methods=["GET", "POST"])
 def input_page():
     # Do Input
-    return render_template('input.html', input_done=input_done, model_run=model_run, flag=0)
+    return render_template('input.html', input_done=input_done, model_run=model_run)
 
 
 @app.route('/input/upload', methods=['POST', 'GET'])
@@ -111,10 +111,8 @@ def input_forecast():
 @app.route('/forecast', methods=['POST', 'GET'])
 def forecast_scheduling():
     global list_unmet_df, list_ramp_req_df, df_load_schedule, df_unmet
-    flash('Please wait while the data is being processed')
-    list_unmet_df, list_ramp_req_df = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
-    rendered = Flask.render_template("input.html", flag=1)
 
+    list_unmet_df, list_ramp_req_df = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
     flash("Forecast and Dispatch Simulations Done!", "success")
     return redirect(url_for('input_page'))
 

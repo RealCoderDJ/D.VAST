@@ -1,5 +1,6 @@
 import os
 from timeit import default_timer as timer
+import progress_bar
 
 import pandas as pd
 from datetime import datetime, timedelta
