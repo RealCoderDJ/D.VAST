@@ -34,7 +34,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdown04">
                     <a class="dropdown-item" href="logout.php?logout">Log Out</a>
                 </div>
-             </li> 
+             </li>
         </ul>
     </nav>
 
@@ -63,7 +63,7 @@
                     <div class="row">
                         <div class="col">
                             (Load Data, Generating Stations, Hydro profile, Solar profile, Wind profile, Nuclear profile) <br><br>
-                        </div>     
+                        </div>
                         <div class="col">
                             <form action="/input/upload" method ="POST" enctype="multipart/form-data">
                                 <input type="file" name="datafile" multiple><br><br>
@@ -81,7 +81,7 @@
                             <div class="col">
                                 Solar (MW) - 2019: <input type="number" step="0.01" name="solar_ic_cur" value = "1680.74"><br>
                                 Solar (MW) - 2022: <input type="number" step="0.01" name="solar_ic" value = "8020"><br>
-                            </div>     
+                            </div>
                             <div class="col">
                                 Wind (MW) - 2019: <input type="number" step="0.01" name="wind_ic_cur" value = "5955.07"><br>
                                 Wind (MW) - 2022: <input type="number" step="0.01" name="wind_ic" value = "8600"><br>
@@ -101,10 +101,10 @@
                             <div class="col">
                                 Load Growth Rate (%):<input type="number" step="0.01" name="load" value = "6.06"><br>
                                 Solar Growth Rate (%): <input type="number" step="0.01" name="solar" value = "20"><br>
-                            </div>     
+                            </div>
                             <div class="col">
                                 Wind Growth Rate (%): <input type="number" step="0.01" name="wind" value = "20"><br>
-                                Number of years: <input type="number" name="year" value = "30"><br>
+                                Number of years: <input type="number" name="year" value = "5"><br>
                             </div>
                         </div>
                         <div class="row-centered">
@@ -113,17 +113,17 @@
                     </form>
                     <div class="row"><br></div>
                 </div>
-                
+
             <div class = "buttonHolder">
                 <button type="button" class="btn btn-primary btn-lg btn-block" onclick=" window.location.href='/forecast';">Forecast and Dispatch Simulation</button>
-                    
+
                 <a href ="#">Results </a>
             </div>
         </div>
         <br />
         <div class="greentop">
             <h4 style="margin-bottom:2%;">Analysing Benefits from BESS</h4>
-            
+
             <button class="collapsible"><span>Bess Parameters</span></button>
             <div class="content">
                 <div class="row"><br></div>
@@ -134,11 +134,11 @@
                             Discharge period (hours): <input type="number" name="hour"  value = "2"> <br>
                             Round-trip efficiency (%): <input type="number" name="rt_efficiency"  value="85"> <br>
                             DoD<br>Upper limit (%): <input type="number" name="ul" value="97" style="width: 10%;">&emsp;Lower limit (%): <input type="number" name="ll" value="3" style="width: 10%;"><br>
-                        </div>     
+                        </div>
                         <div class="col">
                             Total number of cycles: <input type="number" name="cycles"  value="7000"> <br>
                             Cost (₹ / MW): <input type="number" step="0.01" name="cost"  value="70276037"> <br>
-                            Battery Capacity at end of life (%): <input type="number" name="degr"  value="70"> <br>   
+                            Battery Capacity at end of life (%): <input type="number" name="degr"  value="70"> <br>
                             Scrap value as % of initial cost (%): <input type="number" name="scrap"  value="10"> <br>
                             Constant Throughput&emsp;&emsp;&emsp;Yes <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="yesCheck" value = "1">&emsp;No <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="noCheck" value = "0"><br>
                             <div id="ifYes" style="visibility:hidden">
@@ -152,7 +152,7 @@
                 </form>
                 <div class="row"><br></div>
             </div>
-            
+
             <button class="collapsible"><span>Bess Range</span></button>
             <div class="content">
                 <div class="row"><br></div>
@@ -160,7 +160,7 @@
                     <div class="row">
                         <div class="col">
                             Start size (MW): <input type="number" name="start" value="10"><br>
-                        </div>     
+                        </div>
                         <div class="col">
                             End size (MW): <input type="number" name="end" value="50"><br>
                         </div>
@@ -210,7 +210,7 @@
                             Cost of costliest generation (₹/kWh): <input type="number" step="0.01" name="peak" value="7.03"><br>
                             DSM (Cap) Price (₹/kWh): <input type="number" name="dsm"  step="0.01" value="8"> <br>
                             Rate of increase in EC (y-o-y) (%): <input type="number" name="eci"  step="0.01" value="3"> <br>
-                        </div>     
+                        </div>
                         <div class="col">
                             Charging Costs - Morning (₹/kWh): <input type="number" step="0.01" name="morn"  value="2.81"> <br>
                             Charging Costs - Evening (₹/kWh): <input type="number" step="0.01" name="even"  value="3.63"> <br>
@@ -231,7 +231,7 @@
                         <div class="col">
                             Loan Percent (%): <input type="number" step="0.01" name="loan" value="70"><br>
                             Interest Rate (%): <input type="number" step="0.01" name="interest" value="9"><br>
-                        </div>     
+                        </div>
                         <div class="col">
                             Tax Rate (%): <input type="number" step="0.01" name="tax" value="25"><br>
                             Post-tax RoE (%): <input type="number" step="0.01" name="roe" value="14"><br>
@@ -257,7 +257,7 @@
                         <div class="col">
                             Transformer Cost (₹): <input type="number" step="0.01" name="trans_cost" value="1300000"><br>
                             Transformer interest (%): <input type="number" step="0.01" name="trans_int"  value="11"> <br>
-                        </div>     
+                        </div>
                         <div class="col">
                             Land cost (₹): <input type="number" step="0.01" name="land_cost"  value="215278"> <br>
                             Transformer Land required: <input type="number" step="0.01" name="land_req"  value="20"> <br>
@@ -268,7 +268,7 @@
                             <h6>Outage Reduction</h6>
                             No of hours of outage: <input type="number" step="0.01" name="outage" value="20"><br>
                             Average Peak tariff (₹/kWh): <input type="number" step="0.01" name="tariff"  value="7"> <br>
-                        </div>     
+                        </div>
                         <div class="col">
                             <h6>Transmission Reduction</h6>
                             Transmission reduction savings (₹): <input type="number" step="0.01" name="trans_save"  value="2000000"> <br>
@@ -291,7 +291,7 @@
     <script>
         var coll = document.getElementsByClassName("collapsible");
         var i;
-        
+
         for (i = 0; i < coll.length; i++) {
             coll[i].addEventListener("click", function() {
             this.classList.toggle("active");
@@ -311,21 +311,17 @@
             else document.getElementById('ifYes').style.visibility = 'hidden';
         }
 
-        var rate = 5;
+  /*      var overlay_display = {{flag}};
 
-        {% if else %}
-        if {{ flag }}{
+        if (overlay_display == 0){
             document.getElementByClassName("overlay").style.visibility = "visible";
             document.getElementByClassName("overlay_text").style.visibility = "visible";
         }
-        {% endif %}
-
-        {% if else %}
-        if ({{ flag }} == 0){
+        else {
             document.getElementByClassName("overlay").style.visibility = "hidden";
             document.getElementByClassName("overlay_text").style.visibility = "hidden";
         }
-        {% endif %}
+   */
 
 </script>
         <script>
@@ -351,9 +347,9 @@
             preloader3.style.display='none';
             preloader2.style.display='none';
             preloader.style.display='none'; */
-        }                                       
+        }
     </script>
-        
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -368,4 +364,3 @@
 </body>
 
 </html>
-
