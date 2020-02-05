@@ -7,9 +7,12 @@ def net_load(schedule, solar, nuclear, wind, hydro, biomass, power_purchase, yea
     directory = os.path.join(src, "Working Files")
     os.chdir(directory)
 
-    if year == 3:
-        print("hello")
-    schedule = schedule * (load_growth ** year)
+    if year <= 4:
+        schedule = schedule * (load_growth ** year)
+
+    else:
+        schedule = schedule * (load_growth ** 4)*(1.04095)**(year - 4)
+
     solar = solar * (solar_growth ** year)
     wind = wind * (wind_growth ** year)
     net_schedule = schedule.copy()

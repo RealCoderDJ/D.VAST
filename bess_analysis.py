@@ -22,12 +22,17 @@ def analysis(input_values, list_unmet_df, list_ramp_req_df, src):
     size_list = []
     npv_list = []
 
+    # ----------------------------Addition----------------------------------------------
+    os.chdir(os.path.join(src, 'Uploads Folder'))
+    df_peak_cost = pd.read_excel('Peak Cost.xlsx', index_col=0)
+
     while bess_size <= bess_size_end:
         start = timer()
         bess = Bess(bess_cost, bess_size, life, total_cycles, rt_efficiency,
                     hour, degr, scrap_percent, constant_throughput, dod)
         factor = 1
-        bess.benefit(input_values, list_unmet_df, list_ramp_req_df, factor, src)
+        bess.benefit_morning_evening_discharge(input_values, list_unmet_df, list_ramp_req_df, df_peak_cost, src)
+        # bess.benefit(input_values, list_unmet_df, list_ramp_req_df, factor, src)
         bess.financial(input_values)
         end = timer()
         print("Time: ", str(end - start))
@@ -45,7 +50,7 @@ def analysis(input_values, list_unmet_df, list_ramp_req_df, src):
     df_size_npv['Size'] = size_list
     df_size_npv['NPV'] = npv_list
 
-    df_size_npv.set_index('Size', inplace = True)   #TODO remove
+    df_size_npv.set_index('Size', inplace=True)  # TODO remove
 
     npv_file_name = 'NPV vs Size ' + str(total_cycles) + ' Cycles ' + str(hour) + ' Hours ' + str(life) + ' Years'
     writer1 = pd.ExcelWriter(npv_file_name + ".xlsx", engine="xlsxwriter")
@@ -53,6 +58,91 @@ def analysis(input_values, list_unmet_df, list_ramp_req_df, src):
     writer1.save()
 
     return df_size_npv
+
+
+def sensitivity_analysis_cost(input_values, list_unmet_df, list_ramp_req_df, src):
+    bess_size_start, bess_size_end, bess_size_incr = input_values.get_bess_range()
+    hour = input_values.get_hours()
+
+    life, total_cycles, rt_efficiency, degr, scrap_percent, dod = input_values.get_bess_param()
+    bess_cost = input_values.get_bess_cost(hour)
+    constant_throughput = input_values.get_constant_throughput()
+
+    file_name = "BESS Benefits " + str(total_cycles) + " Cycles " + str(hour) + " Hours " + str(life) + " Years"
+    writer = pd.ExcelWriter(file_name + ".xlsx", engine="xlsxwriter")
+
+    # ----------------------------Addition----------------------------------------------
+    os.chdir(os.path.join(src, 'Uploads Folder'))
+    df_peak_cost = pd.read_excel('Peak Cost.xlsx', index_col=0)
+    
+    col_list = [x for x in range(bess_cost, int(bess_cost/3), -4000000)]
+
+    df_size_cost_npv = pd.DataFrame(columns=col_list)
+
+    original_cost = bess_cost
+    bess_size = bess_size_start
+
+    while bess_size <= bess_size_end:
+        start = timer()
+        bess = Bess(bess_cost, bess_size, life, total_cycles, rt_efficiency,
+                    hour, degr, scrap_percent, constant_throughput, dod)
+        factor = 1
+        bess.benefit_morning_evening_discharge(input_values, list_unmet_df, list_ramp_req_df, df_peak_cost, src)
+
+        cost = original_cost
+        npv_list = []
+        cost_list = []
+        while cost > original_cost / 3:
+            bess.set_cost(cost)
+            bess.financial(input_values)
+            npv_list.append(bess.npv)
+            cost_list.append(str(round(cost/10000000, 2)) + ' NPV')
+            cost -= 4000000
+        df_size_cost_npv.loc[bess_size] = npv_list
+        end = timer()
+        print("Time: ", str(end - start))
+        bess_size += bess_size_incr
+
+    df_size_cost_npv.columns = cost_list  # TODO remove
+
+
+
+    # while cost > original_cost/3:
+    #     bess_cost = cost
+    #     size_list = []
+    #     npv_list = []
+    #     bess_size = bess_size_start
+    #     while bess_size <= bess_size_end:
+    #         start = timer()
+    #         bess = Bess(bess_cost, bess_size, life, total_cycles, rt_efficiency,
+    #                     hour, degr, scrap_percent, constant_throughput, dod)
+    #         factor = 1
+    #         bess.benefit_morning_evening_discharge(input_values, list_unmet_df, list_ramp_req_df, df_peak_cost, src)
+    #         # bess.benefit(input_values, list_unmet_df, list_ramp_req_df, factor, src)
+    #         bess.financial(input_values)
+    #         end = timer()
+    #         print("Time: ", str(end - start))
+    #         # df = make_df(bess)
+    #         # df.to_excel(writer, sheet_name=str(bess_size) + " MW " + str(hour) + " hour")
+    #         size_list.append(bess_size)
+    #         npv_list.append(bess.npv)
+    #
+    #         bess_size += bess_size_incr
+    #     # directory = os.path.join(src, "Working Files")
+    #     # os.chdir(directory)
+    #     # writer.save()
+    #
+    #     df_size_cost_npv[str(round(cost/10000000, 2)) + ' NPV'] = npv_list
+    #     cost -= 4000000
+    #
+    # df_size_cost_npv['Size'] = size_list
+    # df_size_cost_npv.set_index('Size', inplace=True)  # TODO remove
+
+    npv_file_name = 'Cost vs NPV vs Size ' + str(total_cycles) + ' Cycles ' + str(hour) + ' Hours ' + str(life) + ' Years'
+    writer1 = pd.ExcelWriter(npv_file_name + ".xlsx", engine="xlsxwriter")
+    df_size_cost_npv.to_excel(writer1, sheet_name='Sheet1')
+    writer1.save()
+
 
 
 def sensitivity_analysis_cost_roe(input_values, list_unmet_df, list_ramp_req_df, size, src):
@@ -80,25 +170,29 @@ def sensitivity_analysis_cost_roe(input_values, list_unmet_df, list_ramp_req_df,
     df_cost_roe["Cost"] = costs
     df_cost_roe.set_index("Cost", inplace=True)
 
+    os.chdir(os.path.join(src, 'Uploads Folder'))
+    df_peak_cost = pd.read_excel('Peak Cost.xlsx', index_col=0)
     start = timer()
+
     bess = Bess(bess_cost, bess_size, life, total_cycles, rt_efficiency,
-                    hour, degr, scrap_percent, constant_throughput, dod)
+                hour, degr, scrap_percent, constant_throughput, dod)
     factor = 1
-    bess.benefit(input_values, list_unmet_df, list_ramp_req_df, factor, src)
+    bess.benefit_morning_evening_discharge(input_values, list_unmet_df, list_ramp_req_df, df_peak_cost, src)
+    # bess.benefit(input_values, list_unmet_df, list_ramp_req_df, factor, src)
     for r in roe_list:
         input_values.set_roe(r)
         list_npv = []
         for c in costs:
-            bess.set_cost(c+2525000)
+            bess.set_cost(c + 2525000)
             bess.financial(input_values)
-            list_npv.append(bess.npv/10000000)
-        df_cost_roe[str(int(r*100)) + "%"] = list_npv
+            list_npv.append(bess.npv / 10000000)
+        df_cost_roe[str(int(r * 100)) + "%"] = list_npv
 
     end = timer()
     input_values.set_roe(initial_roe)
     print("Time: ", str(end - start))
 
-    file_name = "Cost-Roe sensitivity " + str(size) + " MW "+ str(total_cycles) + " Cycles " + str(hour) + " Hours"
+    file_name = "Cost-Roe sensitivity " + str(size) + " MW " + str(total_cycles) + " Cycles " + str(hour) + " Hours"
     writer = pd.ExcelWriter(file_name + ".xlsx", engine="xlsxwriter")
     df_cost_roe.to_excel(writer)
     directory = os.path.join(src, "Working Files")

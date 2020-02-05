@@ -1,17 +1,16 @@
 import os
-import webbrowser
 
 import pandas as pd
 import pygal
 from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory
 
 import download_tables
-from bess_analysis import analysis, sensitivity_analysis_cost_roe
+from bess_analysis import analysis, sensitivity_analysis_cost_roe, sensitivity_analysis_cost
 from graph_style_sheet import custom_style
 from input import Input
 from lc_dispatch import least_cost_dispatch
 
-src = r'C:\Users\dimitra\Documents\BRPL\Toolkit\D.VAST v0.1.2'
+src = r'C:\Users\utkakumar\Documents\Projects\World Bank Battery\codes\D.VAST v0.1.5'
 
 input_values = Input()
 
@@ -42,7 +41,7 @@ df_size_npv = pd.DataFrame()
 # TODO loading screens
 
 # Function to input ramp up time to select the specific time slot in the system
-@app.route('/input/ramp_time', methods=['POST', 'GET'])
+@app.route('/input/ramp_time', methods = ['POST', 'GET'])
 def ramp_up_time_calculation():
     if request.method == 'POST':
         # Extracting inputs from the 'input' html page given by the user
@@ -112,8 +111,8 @@ def input_forecast():
 @app.route('/forecast', methods=['POST', 'GET'])
 def forecast_scheduling():
     global list_unmet_df, list_ramp_req_df, df_load_schedule, df_unmet
-
     list_unmet_df, list_ramp_req_df = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
+
     flash("Forecast and Dispatch Simulations Done!", "success")
     return redirect(url_for('input_page'))
 
@@ -234,11 +233,13 @@ def battery_analysis():
     df_size_npv = analysis(input_values, list_unmet_df, list_ramp_req_df, src)
     model_run = True
 
+    sensitivity_analysis_cost(input_values, list_unmet_df, list_ramp_req_df, src)
+
     # TODO Remove this
-    bess_size = input_values.bess_size_start
-    while bess_size <= input_values.bess_size_end:
-        df = sensitivity_analysis_cost_roe(input_values, list_unmet_df, list_ramp_req_df, bess_size, src)
-        bess_size += input_values.bess_size_incr
+    # bess_size = input_values.bess_size_start
+    # while bess_size <= input_values.bess_size_end:
+    #     df = sensitivity_analysis_cost_roe(input_values, list_unmet_df, list_ramp_req_df, bess_size, src)
+    #     bess_size += input_values.bess_size_incr
 
     flash("Forecast and Scheduling Done!", "success")
     return redirect(url_for('home'))
@@ -320,7 +321,7 @@ def sensitivity_graph(size):
 
 
 def read_excel(filename, sheetname):
-    os.chdir(r'C:\Users\dimitra\Documents\BRPL\Toolkit\D.VAST v0.1.2\Working Files')
+    os.chdir(working_files)
     df = pd.read_excel(filename, sheet_name=sheetname)
     return df
 
@@ -443,8 +444,6 @@ def return_file(name):
     return send_from_directory(working_files, name, as_attachment=True)
     # return name
 
-
-webbrowser.open('http://127.0.0.1:5000/', new=1)
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)
