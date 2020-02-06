@@ -5,12 +5,12 @@ import pygal
 from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory
 
 import download_tables
-from bess_analysis import analysis, sensitivity_analysis_cost_roe
+from bess_analysis import analysis, sensitivity_analysis_cost_roe, sensitivity_analysis_cost
 from graph_style_sheet import custom_style
 from input import Input
 from lc_dispatch import least_cost_dispatch
 
-src = r'C:\Users\dimitra\Documents\BRPL\Toolkit\D.VAST v0.1.2'
+src = r'C:\Users\utkakumar\Documents\Projects\World Bank Battery\codes\D.VAST v0.1.5'
 
 input_values = Input()
 
@@ -85,11 +85,12 @@ def installed_capacity():
         solar_ic = float(request.form['solar_ic'])
         wind_ic = float(request.form['wind_ic'])
         solar_ic_cur = float(request.form['solar_ic_cur'])
-        wind_ic_cur = float(request.form['solar_ic_cur'])
+        wind_ic_cur = float(request.form['wind_ic_cur'])
 
         input_values.set_re_ic(solar_ic, wind_ic, solar_ic_cur, wind_ic_cur)
 
         return redirect(url_for('input_page'))
+
 
 @app.route('/input/forecast', methods=['POST', 'GET'])
 def input_forecast():
@@ -110,7 +111,6 @@ def input_forecast():
 @app.route('/forecast', methods=['POST', 'GET'])
 def forecast_scheduling():
     global list_unmet_df, list_ramp_req_df, df_load_schedule, df_unmet
-    # list_unmet_df, list_ramp_req_df, df_load_schedule, df_unmet = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
     list_unmet_df, list_ramp_req_df = least_cost_dispatch(UPLOAD_FOLDER, input_values, src)
 
     flash("Forecast and Dispatch Simulations Done!", "success")
@@ -233,11 +233,13 @@ def battery_analysis():
     df_size_npv = analysis(input_values, list_unmet_df, list_ramp_req_df, src)
     model_run = True
 
+    sensitivity_analysis_cost(input_values, list_unmet_df, list_ramp_req_df, src)
+
     # TODO Remove this
-    bess_size = input_values.bess_size_start
-    while bess_size <= input_values.bess_size_end:
-        df = sensitivity_analysis_cost_roe(input_values, list_unmet_df, list_ramp_req_df, bess_size, src)
-        bess_size += input_values.bess_size_incr
+    # bess_size = input_values.bess_size_start
+    # while bess_size <= input_values.bess_size_end:
+    #     df = sensitivity_analysis_cost_roe(input_values, list_unmet_df, list_ramp_req_df, bess_size, src)
+    #     bess_size += input_values.bess_size_incr
 
     flash("Forecast and Scheduling Done!", "success")
     return redirect(url_for('home'))
@@ -319,7 +321,7 @@ def sensitivity_graph(size):
 
 
 def read_excel(filename, sheetname):
-    os.chdir(r'C:\Users\dimitra\Documents\BRPL\Toolkit\D.VAST v0.1.2\Working Files')
+    os.chdir(working_files)
     df = pd.read_excel(filename, sheet_name=sheetname)
     return df
 
